@@ -43,7 +43,7 @@ exports.putThread = (req, res) => {
   model.threadModel.findByIdAndUpdate(report_id, { $set: { reported: true } }, { new: true }, (err, doc) => {
     if (err) return res.status(500).json({ error: err });
     if (doc !== null) {
-      return res.status(200).json('Success!');
+      return res.status(200).json('success!');
     } else {
       return res.status(500).json('failure');
     }
@@ -60,7 +60,7 @@ exports.deleteThread = (req, res) => {
       bcrypt.compare(delete_password, doc.password, (err, compare) => {
         if (compare) {
           doc.delete();
-          res.status(200).json('Success!');
+          res.status(200).json('success!');
         } else {
           res.status(500).json('incorrect password');
         }

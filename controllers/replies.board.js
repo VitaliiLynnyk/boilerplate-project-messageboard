@@ -62,7 +62,7 @@ exports.putReplies = (req, res) => {
         doc.save((err, obj) => {
           if (err) return res.status(500).json({ error: err });
           
-          return res.status(200).json('Success!');
+          return res.status(200).json('success!');
         });
       } else {
         return res.status(500).json('failure');
@@ -93,7 +93,7 @@ exports.deleteReplies = (req, res) => {
           doc.save((err, obj) => {
             if (err) return res.status(500).json({ error: err });
             
-            return res.status(200).json('Success!');
+            return res.status(200).json('success!');
           });
         } else {
           res.json('incorrect password');
