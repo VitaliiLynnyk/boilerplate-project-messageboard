@@ -72,3 +72,35 @@ exports.putReplies = (req, res) => {
     }
   });
 };
+
+exports.deleteReplies = (req, res) => {
+  const { thread_id } = req.body;
+  
+  models.threadModel.findById(thread_id, (err, doc) => {
+    if (doc !== null) {
+      if (err) return res.status(500).json({ error: err });
+      
+      let delete_password;
+      for (let i = 0; i < doc.replies.length; i++) {
+        if (doc.replies[i]._id == req.body.reply_id) {
+          delete_password = doc.replies[i].delete_password;
+          doc.replies[i].remove();
+        }
+      }
+      bcrypt.compare(req.body.delete_password, delete_password, (err, bool) => {
+        if (bool) {
+          doc.replycount = doc.replycount - 1;
+          doc.save((err, obj) => {
+            if (err) return res.status(500).json({ error: err });
+            
+            return res.status(200).json('Success!');
+          });
+        } else {
+          res.json('incorrect password');
+        }
+      });
+    } else {
+      res.json("Sorry, but we couldn't find that thread!");
+    }
+  });
+};

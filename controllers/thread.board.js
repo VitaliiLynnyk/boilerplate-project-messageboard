@@ -49,3 +49,24 @@ exports.putThread = (req, res) => {
     }
   });
 };
+
+exports.deleteThread = (req, res) => {
+  const { thread_id, delete_password } = req.body;
+  
+  model.threadModel.findById(thread_id, (err, doc) => {
+    if (err) return res.status(500).json({ error: err });
+    
+    if (doc !== null) {
+      bcrypt.compare(delete_password, doc.password, (err, compare) => {
+        if (compare) {
+          doc.delete();
+          res.status(200).json('Success!');
+        } else {
+          res.status(500).json('incorrect password');
+        }
+      });
+    } else {
+      res.status(404).json("Sorry, we couldn't find that thread!");
+    }
+  });
+};

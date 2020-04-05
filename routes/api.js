@@ -15,10 +15,12 @@ module.exports = app => {
   app.route('/api/threads/:board')
      .get(ThreadController.getThread)
      .post(ThreadController.postThread)
-     .put(ThreadController.putThread);
+     .put(ThreadController.putThread)
+     .delete(ThreadController.deleteThread);
   
   app.route('/api/replies/:board')
      .get(RepliesController.getReplies)
      .post(RepliesController.postReplies)
-     .put(RepliesController.putReplies);
+     .put(RepliesController.putReplies)
+     .delete(RepliesController.deleteReplies);
 };
