@@ -4,12 +4,18 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var expect = require('chai').expect;
 var cors = require('cors');
+var helmet = require('helmet');
+var mongoose = require('mongoose');
+var db = mongoose.connection;
 
 var apiRoutes = require('./routes/api.js');
 var fccTestingRoutes = require('./routes/fcctesting.js');
 var runner = require('./test-runner');
 
 var app = express();
+
+//dotenv
+require('dotenv').config({ path: __dirname + '/.env' });
 
 // security
 app.use(
@@ -20,10 +26,10 @@ app.use(
     noCache: true,
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'"],
+        defaultSrc: [ "'self'" ],
+        styleSrc: [ "'self'" ],
+        scriptSrc: [ "'self'" ],
+        imgSrc: [ "'self'" ],
       },
     },
   })
@@ -35,6 +41,19 @@ app.use(cors({ origin: '*' })); //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//db connection
+console.log(process.env.DB);
+
+mongoose.connect(process.env.DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  poolSize: 4,
+  wtimeout: 2500
+});
+
+db.on('err', console.error.bind(console, 'connection error'));
+db.once('openURI', () => console.log('connected'));
 
 //Sample front-end
 app.route('/b/:board/').get(function (req, res) {
